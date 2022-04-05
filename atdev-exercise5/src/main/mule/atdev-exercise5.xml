@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7cf9d352-051e-4d0f-b907-6ddbe3692f04" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="62e3df92-7af9-402b-b7ee-82fa761bb03e" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="root" database="mulesoft" />
+	</db:config>
+	<flow name="atdev-exercise5Flow" doc:id="105f4e8c-789a-49c3-8412-f056cf90f590" >
+		<http:listener doc:name="Listener" doc:id="37986964-a4d2-4831-9685-bb384ae6034b" config-ref="HTTP_Listener_config" path="/users"/>
+		<db:select doc:name="Select" doc:id="cd96924c-0fc2-47a0-a3d9-ab2187bc2b76" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from users]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="d9d6fe68-22e6-4a50-a5b5-5db3216674e2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

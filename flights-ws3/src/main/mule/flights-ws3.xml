@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ce4540ca-b476-4242-b66e-c0a137ab4d95" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ef8767bf-c22b-4cee-b47a-498068dab1d7" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="136c2ca1-8477-4893-922c-51abb3b63d45" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="root" database="mulesoft" />
+	</db:config>
+	<flow name="flights-ws3Flow" doc:id="399a0d46-b359-4248-8172-67808102f003" >
+		<http:listener doc:name="Listener" doc:id="748dcfb5-f0fc-4b6a-9a9e-05d42a2b9c3b" config-ref="HTTP_Listener_config" path="/flights" allowedMethods="POST"/>
+		<db:insert doc:name="Insert" doc:id="227a1f67-53f8-4574-af6c-1d13f3f5a766" config-ref="Database_Config">
+			<db:sql ><![CDATA[insert into flights(fid,fname) values(:fid,:fname)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'fid' : attributes.queryParams.fid,
+ 'fname':attributes.queryParams.fname
+}]]]></db:input-parameters>
+		</db:insert>
+		<set-payload value='#[{"message": "Flight virtually added"}]' doc:name="Set Payload" doc:id="f326d022-e4a1-49b9-a620-4269a712a2a5" />
+		<ee:transform doc:name="Transform Message" doc:id="f98224ce-3d25-46f6-ab82-9fd4b24206e4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

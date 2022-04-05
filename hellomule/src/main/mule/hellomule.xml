@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9118eee6-cf0f-4874-9302-6a1c9181d5bf" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="hellomuleFlow" doc:id="9a9d9ecd-8122-4c8e-96fb-32d5e9f32ea5" >
+		<http:listener doc:name="Listener" doc:id="2e6cf58c-5422-4e9e-8889-7f95fdd852af" config-ref="HTTP_Listener_config" path="/hellomule" />
+		<set-payload value="Hello Mule" doc:name="Set Payload" doc:id="288ba227-2c73-42d9-9fb9-70c6e9849959" />
+		<logger level="INFO" doc:name="Logger" doc:id="8e5d2349-588c-4162-ba74-ab400390d40f" message="current application is #[payload]"/>
+	</flow>
+</mule>
