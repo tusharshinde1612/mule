@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ebb4bfd2-73d3-4bcd-845e-0b10f19ab3d8" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="atdev-practiceex2Flow" doc:id="3816d445-b820-4064-9812-c3d1613e710b" >
+		<http:listener doc:name="Listener" doc:id="72bf1a7e-da6b-4c0f-aea6-c02696b2d153" config-ref="HTTP_Listener_config" path="/getCustomerInfo"/>
+		<set-payload value="#[upper('Welcome') ++' '++ upper(attributes.queryParams.customerName) as String ++'.'++ upper('Your location is')++' '++ &#10;upper(attributes.queryParams.customerLocation) as String]" doc:name="Set Payload" doc:id="cf372da7-ea2c-43d1-8a3b-56adb8c2a4f4" />
+		<logger level="INFO" doc:name="Logger" doc:id="0506ffc3-cbf3-42ea-8b06-0ec8a1f055a6" />
+	</flow>
+</mule>

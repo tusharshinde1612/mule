@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a6e8a269-8251-449f-b412-e080bcd13b6f" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="atdev-practiceex1Flow" doc:id="bf8e65cd-bbdd-4916-b765-06052430c851" >
+		<http:listener doc:name="Listener" doc:id="ba73ba67-2019-4458-831c-8cd371a27992" config-ref="HTTP_Listener_config" path="/getCustomerInfo"/>
+		<set-payload value="#['Welcome' ++' '++ attributes.queryParams.customerName as String ++'.'++'Your location is '++' '++ &#10;attributes.queryParams.customerLocation as String]" doc:name="Set Payload" doc:id="4c592568-6bd9-4dc7-ae9f-281e86be16bd" />
+		<logger level="INFO" doc:name="Logger" doc:id="b701ae3e-b548-46d7-bf9d-1a77632af297" />
+	</flow>
+</mule>

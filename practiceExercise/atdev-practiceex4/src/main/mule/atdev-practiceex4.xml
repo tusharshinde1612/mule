@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5b1f63cb-3d46-4ff2-94bd-5198e5dbb227" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="295c7932-3211-4532-b2e3-8f5a1cd1fb1c" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<flow name="firstFlow" doc:id="7c3322f7-0502-44a6-8828-7485ebcb8fe7" >
+		<http:listener doc:name="Listener" doc:id="30c27157-90c9-4ad8-afb0-6280c8b043cd" config-ref="HTTP_Listener_config" path="/getCustomerInfo"/>
+		<http:request method="GET" doc:name="Request" doc:id="777c1c61-1f5c-416f-a11f-1a10ab726ca0" path="/secondFlow" config-ref="HTTP_Request_configuration">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"firstName" : attributes.queryParams.customerName
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="78629f86-9508-43e9-be78-81f8adfbf5c7" />
+	</flow>
+	<flow name="atdev-practiceex4Flow" doc:id="f6ea4eab-15df-4395-9406-59f4ac3d07ea" >
+		<http:listener doc:name="Listener" doc:id="b1669144-1d10-48e6-8d95-3322dea186d5" config-ref="HTTP_Listener_config" path="/secondFlow"/>
+		<set-payload value="#['Customer first Name is:' ++ attributes.queryParams.firstName as String]" doc:name="Set Payload" doc:id="1e516199-e38e-416b-a0ff-5acdac734e03" />
+	</flow>
+</mule>
